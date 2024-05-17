@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Solarint.LouderSuppressors
 {
-    [BepInPlugin("solarint.loudSuppressors", "Solarint.LouderSuppressors", "1.0.0")]
+    [BepInPlugin("solarint.loudSuppressors", "Solarint.LouderSuppressors", "1.0.1")]
     public class Plugin : BaseUnityPlugin
     {
         private void Awake()
@@ -73,13 +73,13 @@ namespace Solarint.LouderSuppressors
 
         public static void Init(ConfigFile Config)
         {
-            ModEnabled = Config.Bind(GeneralSectionTitle, "Enable Louder Suppressors", true, "Turns this mod on or Off. Requires restart if in raid.");
-            Rolloff = Config.Bind(GeneralSectionTitle, "Suppressor Max Rolloff Distance", 200f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f)));
-            BlendVal1 = Config.Bind(GeneralSectionTitle, "Blend Val 1", 10f, new ConfigDescription("", new AcceptableValueRange<float>(5f, 400f)));
-            BlendVal2 = Config.Bind(GeneralSectionTitle, "Blend Val 2", 40f, new ConfigDescription("", new AcceptableValueRange<float>(20f, 400f)));
-            BlendVal3 = Config.Bind(GeneralSectionTitle, "Blend Val 3", 80f, new ConfigDescription("", new AcceptableValueRange<float>(50f, 400f)));
-            BlendVal4 = Config.Bind(GeneralSectionTitle, "Blend Val 4", 175f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f)));
-            TailDistModifier = Config.Bind(GeneralSectionTitle, "TailDistModifier", 1.25f, new ConfigDescription("", new AcceptableValueRange<float>(0.75f, 1.5f)));
+            ModEnabled = Config.Bind(GeneralSectionTitle, "Enable Louder Suppressors", true, new ConfigDescription("Turns this mod on or Off. Requires restart if in raid.", null, new ConfigurationManagerAttributes() { IsAdvanced = false, Order = 6 }));
+            Rolloff = Config.Bind(GeneralSectionTitle, "Suppressor Max Rolloff Distance", 225f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f), new ConfigurationManagerAttributes() { IsAdvanced = false, Order = 5 }));
+            BlendVal1 = Config.Bind(GeneralSectionTitle, "Blend Val 1", 10f, new ConfigDescription("", new AcceptableValueRange<float>(5f, 400f), new ConfigurationManagerAttributes() { IsAdvanced = true, Order = 4 } ));
+            BlendVal2 = Config.Bind(GeneralSectionTitle, "Blend Val 2", 40f, new ConfigDescription("", new AcceptableValueRange<float>(20f, 400f), new ConfigurationManagerAttributes() { IsAdvanced = true, Order = 3 }));
+            BlendVal3 = Config.Bind(GeneralSectionTitle, "Blend Val 3", 80f, new ConfigDescription("", new AcceptableValueRange<float>(50f, 400f), new ConfigurationManagerAttributes() { IsAdvanced = true, Order = 2 }));
+            BlendVal4 = Config.Bind(GeneralSectionTitle, "Blend Val 4", 200f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f), new ConfigurationManagerAttributes() { IsAdvanced = true, Order = 1 }));
+            TailDistModifier = Config.Bind(GeneralSectionTitle, "TailDistModifier", 1.25f, new ConfigDescription("", new AcceptableValueRange<float>(0.75f, 1.5f), new ConfigurationManagerAttributes() { IsAdvanced = true, Order = 0 }));
         }
     }
 }
