@@ -34,33 +34,27 @@ namespace Solarint.LouderSuppressors
         [PatchPrefix]
         public static void PatchPrefix(WeaponSoundPlayer __instance)
         {
-            if (__instance?.IsSilenced == true 
+            if (__instance?.IsSilenced == true
                 && Settings.ModEnabled.Value)
             {
-                float maxDist = Settings.SuppressorVolume.Value;
-                SetRolloff(__instance.TailSilenced, maxDist);
-                SetRolloff(__instance.BodySilenced, maxDist);
+                float maxDist = Settings.Rolloff.Value;
+                SetRolloff(__instance.TailSilenced, maxDist, Settings.TailDistModifier.Value);
+                SetRolloff(__instance.BodySilenced, maxDist, 1f);
             }
         }
 
-        private static void SetRolloff(SoundBank soundBank, float maxDist)
+        private static void SetRolloff(SoundBank soundBank, float maxDist, float modifier)
         {
-            if (soundBank != null
-                && soundBank.Rolloff != maxDist)
+            if (soundBank != null && soundBank.Rolloff != maxDist * modifier)
             {
-                soundBank.Rolloff = maxDist;
+                soundBank.Rolloff = maxDist * modifier;
 
                 if (soundBank.BlendValues != null)
                 {
-                    soundBank.BlendValues[0] *= 1.5f;
-                    soundBank.BlendValues[1] *= 1.75f;
-                    soundBank.BlendValues[2] *= 2f;
-                    soundBank.BlendValues[3] *= 2.25f;
-
-                    if (soundBank.BlendValues[3] < maxDist)
-                    {
-                        soundBank.BlendValues[3] = maxDist;
-                    }
+                    soundBank.BlendValues[0] = Settings.BlendVal1.Value * modifier;
+                    soundBank.BlendValues[1] = Settings.BlendVal2.Value * modifier;
+                    soundBank.BlendValues[2] = Settings.BlendVal3.Value * modifier;
+                    soundBank.BlendValues[3] = Settings.BlendVal4.Value * modifier;
                 }
             }
         }
@@ -70,25 +64,22 @@ namespace Solarint.LouderSuppressors
     {
         private const string GeneralSectionTitle = "General";
         public static ConfigEntry<bool> ModEnabled;
-        public static ConfigEntry<float> SuppressorVolume;
+        public static ConfigEntry<float> Rolloff;
+        public static ConfigEntry<float> BlendVal1;
+        public static ConfigEntry<float> BlendVal2;
+        public static ConfigEntry<float> BlendVal3;
+        public static ConfigEntry<float> BlendVal4;
+        public static ConfigEntry<float> TailDistModifier;
 
         public static void Init(ConfigFile Config)
         {
-            ModEnabled = Config.Bind(
-                GeneralSectionTitle,
-                "Enable Louder Suppressors",
-                true,
-                "Turns this mod on or Off. Requires restart if in raid."
-                );
-
-            SuppressorVolume = Config.Bind(
-                GeneralSectionTitle,
-                "Suppressor Max Audible Distance",
-                225f,
-                new ConfigDescription(
-                    "The max distance you will be able to hear suppressors. Requires restart if in raid.",
-                    new AcceptableValueRange<float>(100f, 400f)
-                ));
+            ModEnabled = Config.Bind(GeneralSectionTitle, "Enable Louder Suppressors", true, "Turns this mod on or Off. Requires restart if in raid.");
+            Rolloff = Config.Bind(GeneralSectionTitle, "Suppressor Max Rolloff Distance", 200f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f)));
+            BlendVal1 = Config.Bind(GeneralSectionTitle, "Blend Val 1", 10f, new ConfigDescription("", new AcceptableValueRange<float>(5f, 400f)));
+            BlendVal2 = Config.Bind(GeneralSectionTitle, "Blend Val 2", 40f, new ConfigDescription("", new AcceptableValueRange<float>(20f, 400f)));
+            BlendVal3 = Config.Bind(GeneralSectionTitle, "Blend Val 3", 80f, new ConfigDescription("", new AcceptableValueRange<float>(50f, 400f)));
+            BlendVal4 = Config.Bind(GeneralSectionTitle, "Blend Val 4", 175f, new ConfigDescription("", new AcceptableValueRange<float>(100f, 400f)));
+            TailDistModifier = Config.Bind(GeneralSectionTitle, "TailDistModifier", 1.25f, new ConfigDescription("", new AcceptableValueRange<float>(0.75f, 1.5f)));
         }
     }
 }
