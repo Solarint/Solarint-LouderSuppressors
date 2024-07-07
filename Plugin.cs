@@ -1,4 +1,4 @@
-﻿using Aki.Reflection.Patching;
+﻿using SPT.Reflection.Patching;
 using BepInEx;
 using BepInEx.Configuration;
 using EFT;
@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Solarint.LouderSuppressors
 {
-    [BepInPlugin("solarint.loudSuppressors", "Solarint.LouderSuppressors", "1.1")]
+    [BepInPlugin("solarint.loudSuppressors", "Solarint.LouderSuppressors", "1.2")]
     public class Plugin : BaseUnityPlugin
     {
         private void Awake()
